@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css">
-    <link rel="stylesheet" href="_________________________">
+    <link rel="stylesheet" href="CSS/style.css">
     <title>CRUD Customer Information with Enlarge Image</title>
 
 </head>
@@ -36,11 +36,11 @@
                     </thead>
                     <tbody>
                         <?php
-                        require '______________';
+                        require 'connect.php';
                         $sql =
-                            'SELECT * FROM customer c, country t WHERE _________________________';
+                            'SELECT * FROM customer c, country t WHERE c.CountryCode = t.CountryCode';
                         $stmt = $conn->prepare($sql);
-                        __________________
+                        $stmt->execute();
                         $result = $stmt->fetchAll();
                         foreach ($result as $r) { ?>
                             <tr>
@@ -50,7 +50,7 @@
                                 <td><?= $r['Email'] ?></td>
                                 <td><?= $r['CountryName'] ?></td>
                                 <td align="right"><?= $r['OutstandingDebt'] ?></td>
-                                <td><img src="../image/<?= $r['Image']; ?>" width="50px" height="50" alt="image" onclick="enlargeImg()" id="img1" ></td>
+                                <td><img src="./image/<?= $r['Image']; ?>" width="50px" height="50" alt="image" onclick="enlargeImg()" id="img1" ></td>
 
                                 <td><a href="updateCustomerForm.php?CustomerID=<?= $r['CustomerID'] ?>" class="btn btn-warning btn-sm">แก้ไข</a></td>
                                 <td><a href="deleteCustomer.php?CustomerID=<?= $r['CustomerID'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('ยืนยันการลบข้อมูล !!');">ลบ</a></td>
@@ -68,7 +68,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function() {
-            $('#__________________').DataTable();
+            $('customerTable').DataTable();
         });
     </script>
     

@@ -24,7 +24,7 @@
 
 <body>
     <?php
-    require '______________';
+    require 'connect.php';
 
     $sql_select = 'select * from country order by CountryCode';
     $stmt_s = $conn->prepare($sql_select);
@@ -32,30 +32,30 @@
 
     if (isset($_POST['submit'])) {
         //if ((isset($_POST['customerID']) && isset($_POST['name'])) != null)
-        if (!empty($_POST['customerID']) && !empty($_POST['name']) ) {
-            echo '<br>' . $_POST['customerID'];
+        if (!empty($_POST['CustomerID']) && !empty($_POST['Name']) ) {
+            echo '<br>' . $_POST['CustomerID'];
 
-            $uploadFile = $_FILES['image']['name'];
-            $tmpFile = $_FILES['image']['tmp_name'];
+            $uploadFile = $_FILES['Image']['name'];
+            $tmpFile = $_FILES['Image']['tmp_name'];
             echo " upload file = " . $uploadFile;
             echo " tmp file = " . $tmpFile;
 
             $sql = "insert into customer 
-							values (:customerID, :Name, :birthdate, :email, :countrycode,
-							:outstandingDebt, :image)";
+							values (:CustomerID, :Name, :Birthdate, :Email, :CountryCode,
+							:OutstandingDebt, :Image)";
 
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':customerID', $_POST['customerID']);
-            $stmt->bindParam(':Name', $_POST['name']);
-            $stmt->bindParam(':birthdate', $_POST['birthdate']);
-            $stmt->bindParam(':email', $_POST['email']);
-            $stmt->bindParam(':countrycode', $_POST['countrycode']);
-            $stmt->bindParam(':outstandingDebt', $_POST['outstandingDebt']);
-            $stmt->bindParam(':image', $uploadFile);
+            $stmt->bindParam(':CustomerID', $_POST['CustomerID']);
+            $stmt->bindParam(':Name', $_POST['Name']);
+            $stmt->bindParam(':Birthdate', $_POST['Birthdate']);
+            $stmt->bindParam(':Email', $_POST['Email']);
+            $stmt->bindParam(':CountryCode', $_POST['CountryCode']);
+            $stmt->bindParam(':OutstandingDebt', $_POST['OutstandingDebt']);
+            $stmt->bindParam(':Image', $uploadFile);
             echo "image = " . $uploadFile;
 
 
-            $fullpath = "../image/" . $uploadFile;
+            $fullpath = "./image/" . $uploadFile;
             echo " fullpath = " . $fullpath;
             move_uploaded_file($tmpFile, $fullpath);
 
@@ -104,30 +104,31 @@
                 <h3>ฟอร์มเพิ่มข้อมูลลูกค้า</h3>
                 <form action="addCustomer_dropdown.php" method="POST" enctype="multipart/form-data">
                     <!-- ศึกษาเพิ่มเติมการอัปโหลดไฟล์ https://www.w3schools.com/php/php_file_upload.asp -->
-                    <input type="text" placeholder="Enter Customer ID" name="customerID" required>
+                    <input type="text" placeholder="Enter Customer ID" name="CustomerID" required>
                     <br> <br>
-                    <input type="text" placeholder="Name" name="name" required>
+                    <input type="text" placeholder="Name" name="Name" required>
                     <br> <br>
-                    <input type="date" placeholder="Birthdate" name="birthdate">
+                    <input type="date" placeholder="Birthdate" name="Birthdate">
                     <br> <br>
-                    <input type="email" placeholder="Email" name="email">
+                    <input type="email" placeholder="Email" name="Email">
                     <br> <br>
-                    <input type="number" placeholder="OutStanding debt" name="outstandingDebt">
+                    <input type="number" placeholder="OutStanding debt" name="OutstandingDebt">
                     <br> <br>
                     <label>Select a country code</label>
-                    <select name="                ">
-                        <?php  
-
-
-
-
-                        <?php } ?>
+                    <select name="CountryCode">
+                        <?php
+                            while ($cc = $stmt_s->fetch(PDO::FETCH_ASSOC)) :
+                            ?>
+                        <option value="<?php echo $cc['CountryCode']; ?>">
+                            <?php echo $cc['CountryName']; ?>
+                            </option>
+                        <?php endwhile; ?>
                     </select>
-                    <br> <br>
-                    แนบรูปภาพ:
-                    <input type="________" name=__________________ required>
                     <br><br>
-                    <input type="submit" value="Submit" name="submit" />
+                    แนบรูปภาพ:
+                    <input type="file" name="Image" required>
+                    <br><br>
+                    <input type="submit" value="Submit" name="submit">
                 </form>
             </div>
         </div>

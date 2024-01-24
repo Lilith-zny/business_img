@@ -1,7 +1,9 @@
 <?php
 
-if (isset($_POST['CustomerID'])) {
-    require '______________';
+if (isset($_POST['CustomerID']) && isset($_POST['Name']) && isset($_POST['Email'])) {
+    require 'connect.php';
+
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $CustomerID = $_POST['CustomerID'];
     $Name = $_POST['Name'];
@@ -12,10 +14,12 @@ if (isset($_POST['CustomerID'])) {
     echo 'Email = ' . $Email;
 
 
-    // $stmt = $conn->prepare("UPDATE  Customer SET Name=:Name, Email=:Email WHERE CustomerID=:CustomerID");
-    $stmt = $conn->prepare(
-        '                                 '
-    );
+    $sql = "UPDATE customer SET Name = :Name, Email = :Email WHERE CustomerID = :CustomerID";
+    $stmt = $conn->prepare($sql);
+    
+    $stmt->bindParam(':Name', $_POST['Name']);
+    $stmt->bindParam(':Email', $_POST['Email']);
+    $stmt->bindParam(':CustomerID', $_POST['CustomerID']);
 
 
     echo '
@@ -23,7 +27,7 @@ if (isset($_POST['CustomerID'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
 
-    if ($stmt->rowCount() >= 0) {
+    if ($stmt->execute()) {
         echo '
         <script type="text/javascript">
         
